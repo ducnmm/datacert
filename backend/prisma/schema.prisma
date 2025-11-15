@@ -1,0 +1,99 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Dataset {
+  id              String   @id @default(uuid())
+  datasetId       String   @unique // dataset-xxx format
+  name            String
+  description     String
+  owner           String
+  walrusBlobId    String?
+  integrityRoot   String?  // Walrus certificate/blob object ID
+  proofHash       String?  // SHA256 proof hash
+  sha256Hash      String?
+  poseidonHash    String?
+  certificateId   String?  @unique
+  fileSize        Int      @default(0)
+  fileType        String   @default("text/csv")
+  downloads       Int      @default(0)
+  totalRevenue    Int      @default(0)
+  status          String   @default("pending") // pending, certified, rejected
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Access policy
+  accessType      String   @default("stake_gated") // stake_gated, public, private
+  minStakeAmount  Int      @default(0)
+
+  // Trust Score fields
+  trustScore      Int?     // 0-100
+  trustFactors    Json?    // Breakdown of trust score factors
+  lastVerifiedAt  DateTime?
+
+  // Relations
+  claims          Claim[]
+  accessRecords   AccessRecord[]
+  trustHistory    TrustScoreHistory[]
+
+  @@index([datasetId])
+  @@index([owner])
+  @@index([status])
+  @@index([trustScore])
+}
+
+model Claim {
+  id          String   @id @default(uuid())
+  datasetId   String
+  dataset     Dataset  @relation(fields: [datasetId], references: [id], onDelete: Cascade)
+
+  claimant    String
+  issue       String
+  evidence    String
+  severity    String   @default("low") // low, medium, high, critical
+  timestamp   DateTime @default(now())
+
+  @@index([datasetId])
+  @@index([claimant])
+  @@index([severity])
+}
+
+model AccessRecord {
+  id            String   @id @default(uuid())
+  datasetId     String
+  dataset       Dataset  @relation(fields: [datasetId], references: [id], onDelete: Cascade)
+
+  requester     String
+  purpose       String
+  stakeAmount   Int      @default(0)
+  txHash        String?  // Sui transaction hash
+  timestamp     DateTime @default(now())
+
+  @@index([datasetId])
+  @@index([requester])
+  @@index([timestamp])
+}
+
+model TrustScoreHistory {
+  id                  String   @id @default(uuid())
+  datasetId           String
+  dataset             Dataset  @relation(fields: [datasetId], references: [id], onDelete: Cascade)
+  score               Int
+  provenanceScore     Int
+  integrityScore      Int
+  auditScore          Int
+  usageScore          Int
+  verifiedByNautilus  Boolean  @default(false)
+  factors             Json
+  createdAt           DateTime @default(now())
+
+  @@index([datasetId, createdAt])
+}

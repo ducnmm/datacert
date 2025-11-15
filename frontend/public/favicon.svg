@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <!-- Shield background -->
+  <path d="M32 4 L56 14 L56 28 C56 44 44 56 32 60 C20 56 8 44 8 28 L8 14 Z"
+        fill="#4F46E5" stroke="#312E81" stroke-width="2"/>
+
+  <!-- Database icon inside shield -->
+  <ellipse cx="32" cy="24" rx="12" ry="4" fill="#E0E7FF"/>
+  <path d="M20 24 L20 32 C20 34.2 25.4 36 32 36 C38.6 36 44 34.2 44 32 L44 24"
+        fill="#C7D2FE" stroke="#E0E7FF" stroke-width="1.5"/>
+  <path d="M20 28 L20 36 C20 38.2 25.4 40 32 40 C38.6 40 44 38.2 44 36 L44 28"
+        fill="#A5B4FC" stroke="#C7D2FE" stroke-width="1.5"/>
+
+  <!-- Checkmark for trust -->
+  <path d="M36 42 L40 46 L48 36"
+        stroke="#10B981" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+</svg>
