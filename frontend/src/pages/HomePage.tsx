@@ -230,11 +230,6 @@ export function HomePage() {
             </div>
 
             <div className="feature-card">
-              <h3>🔒 Seal Access Control</h3>
-              <p>Zero-knowledge access policies with stake-gating and token-gating</p>
-            </div>
-
-            <div className="feature-card">
               <h3>⛓️ Sui Blockchain</h3>
               <p>Immutable provenance records with on-chain certificates and claims</p>
             </div>

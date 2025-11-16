@@ -77,6 +77,12 @@ export class WalrusClient {
         }
       }
 
+      // Log detailed error info
+      console.error('❌ Walrus CLI failed:', {
+        status: result.status,
+        stderr: stderr.substring(0, 500),
+        stdout: stdout.substring(0, 500)
+      })
       this.handleWalrusError(stderr || stdout)
       return this.makeMockResult(sizeBytes, sha256, poseidon)
     } catch (error) {

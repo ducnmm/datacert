@@ -62,10 +62,16 @@ export class SuiClient {
       if (process.env.SUI_PRIVATE_KEY) {
         const privKey = process.env.SUI_PRIVATE_KEY
 
-        // Support both bech32 (suiprivkey1...) and hex formats
+        // Support bech32, base64 (with flag), and hex formats
         if (privKey.startsWith('suiprivkey1')) {
           // Bech32 format - use fromSecretKey with the bech32 string
           this.keypair = Ed25519Keypair.fromSecretKey(privKey)
+        } else if (privKey.length === 44 && /^[A-Za-z0-9+/]+=*$/.test(privKey)) {
+          // Base64 format (44 chars with flag byte) - decode and use
+          const decoded = Buffer.from(privKey, 'base64')
+          // First byte is the scheme flag (0 for ed25519), rest is the private key
+          const secretKey = decoded.slice(1)
+          this.keypair = Ed25519Keypair.fromSecretKey(secretKey)
         } else {
           // Hex format
           const secretKey = Buffer.from(privKey, 'hex')

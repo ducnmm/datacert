@@ -1,6 +1,7 @@
 import fs from 'fs'
 
 const logFile = new URL('../logs/provenance.log', import.meta.url)
+const isServerless = process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME
 
 interface AuditEntry {
   level: 'info' | 'warn' | 'error'
@@ -12,11 +13,16 @@ interface AuditEntry {
 
 function append(entry: AuditEntry): void {
   const line = JSON.stringify(entry)
-  fs.appendFile(logFile, line + '\n', err => {
-    if (err) {
-      console.error('Failed to write audit log', err)
-    }
-  })
+
+  // Only write to file if not in serverless environment
+  if (!isServerless) {
+    fs.appendFile(logFile, line + '\n', err => {
+      if (err) {
+        console.error('Failed to write audit log', err)
+      }
+    })
+  }
+
   const logLine = `[${entry.level.toUpperCase()}] ${entry.event} – ${entry.message}`
   if (entry.level === 'error') {
     console.error(logLine, entry.payload)

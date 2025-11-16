@@ -1,8 +1,15 @@
-# Walrus Haulout - AI Dataset Trust Marketplace
+# Datacert - AI Dataset Trust Marketplace
 
 **Walrus Haulout Hackathon 2025** (Provably Authentic Track)
 
 Decentralized marketplace for AI training datasets with trust verification powered by Sui blockchain, Walrus storage, and Nautilus TEE.
+
+## Reason
+Recently, several major lawsuits — including the Munich court ruling that ChatGPT violated copyright by training on song lyrics — have shown how serious the copyright problem is for AI training data. This makes it essential to have a marketplace where people can legally buy and sell datasets with transparent usage rights.
+
+Our project solves this by storing purchase and access history on-chain, so any future dispute can be resolved by proving legitimate access through the blockchain record.
+
+In addition to normal backend/on-chain checks, we also added a Nautilus-based (mock AWS Nitro) verification layer to compute trust scores securely and tamper-resistantly.
 
 ## Key Innovation: AI Trust Oracle
 
@@ -26,6 +33,16 @@ Frontend (React) ──▶ Backend (Node) ──▶ Walrus Storage
                           ▼
                     PostgreSQL
 ```
+
+## Cost & Access
+
+> **💡 No Wallet Required**: For easy testing and observation, all Walrus storage and Sui gas costs are currently **sponsored via Walrus CLI**. Users can upload and interact with datasets without connecting a wallet or paying any fees.
+
+## Live Deployment
+
+**Frontend**: [https://frontend-ten-azure-64.vercel.app/](https://frontend-ten-azure-64.vercel.app/) (Vercel)
+**Backend API**: [https://walrus-haulout-backend-long-bird-9060.fly.dev](https://walrus-haulout-backend-long-bird-9060.fly.dev) (Fly.io)
+**Nautilus TEE** (Mock): [https://walrus-haulout-nautilus.fly.dev](https://walrus-haulout-nautilus.fly.dev) (Fly.io)
 
 ## Features
 
@@ -130,16 +147,7 @@ POST /api/claims                # File audit claim
 GET  /api/datasets/:id/claims   # Get all claims
 ```
 
-## Database Schema
-
-- **Dataset**: id, datasetId, name, owner, walrusBlobId, integrityRoot, proofHash, sha256Hash, certificateId, trustScore, accessType, minStakeAmount
-- **Claim**: id, datasetId, claimant, issue, evidence, severity
-- **AccessRecord**: id, datasetId, requester, purpose, stakeAmount, txHash
-- **TrustScoreHistory**: id, datasetId, score breakdown, verifiedByNautilus, factors
-
 ## On-Chain Objects
-
-All verifiable on [Suiscan](https://suiscan.xyz/testnet):
 
 1. **Dataset Certificate (NFT)** - Unique per dataset, contains metadata, integrity hash, trust score
 2. **Access Registry** (`0x84ce31...`) - All access grants, transparent revenue tracking
@@ -171,19 +179,6 @@ npx prisma migrate dev --name migration_name
 - Event indexer
 - On-chain object links
 
-**Phase 2: Production** (Post-Hackathon)
-- Mainnet deployment
-- Multi-format support (images, audio, video)
-- Advanced access policies
-- Revenue sharing
-- Dispute resolution
-
-**Phase 3: Ecosystem** (Q2 2025)
-- Marketplace with search/filters
-- AI model provenance tracking
-- Reputation system
-- Mobile app
-
 ## Security Considerations
 
 ### Cryptographic Guarantees
@@ -204,14 +199,6 @@ npx prisma migrate dev --name migration_name
 - No automated claim verification (relies on human auditors)
 - Event indexer doesn't handle chain reorgs
 
-## Contributing
-
-Hackathon project - not currently accepting contributions. Feedback welcome via issues.
-
-## License
-
-MIT License
-
 ## Acknowledgments
 
 **Walrus Team**, **Sui Foundation**, **Nautilus/Automata**, **Walrus Haulout Hackathon** organizers
@@ -219,5 +206,3 @@ MIT License
 ---
 
 Built with ❤️ for **Walrus Haulout Hackathon 2025**
-
-**Links**: [Demo](http://localhost:5173) | [Sui Testnet](https://suiscan.xyz/testnet) | [Walrus](https://walrus-testnet.walrus.space)

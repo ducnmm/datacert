@@ -8,16 +8,12 @@ import { indexer } from './services/indexer.js'
 
 const app = express()
 
-// CORS configuration to allow Chrome extension
+// CORS configuration to allow Chrome extension and Vercel frontend
 app.use(cors({
-  origin: [
-    'http://localhost:5173',
-    'http://localhost:5174',
-    'http://localhost:3000',
-    /^chrome-extension:\/\//,  // Allow all Chrome extensions
-    /^moz-extension:\/\//      // Allow Firefox extensions
-  ],
-  credentials: true
+  origin: true,  // Allow all origins for now (Vercel deployment)
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }))
 app.use(express.json({ limit: '25mb' }))
 app.use(morgan('dev'))
@@ -46,9 +42,15 @@ app.use(
   }
 )
 
-app.listen(config.port, async () => {
-  console.log(`DataCert backend running at http://localhost:${config.port}`)
+// For Vercel serverless deployment
+export default app
 
-  // Start blockchain indexer
-  await indexer.start()
-})
+// For local development
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(config.port, async () => {
+    console.log(`DataCert backend running at http://localhost:${config.port}`)
+
+    // Start blockchain indexer (only in local dev)
+    await indexer.start()
+  })
+}

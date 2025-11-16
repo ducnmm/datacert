@@ -1,0 +1,12 @@
+# Walrus Client Configuration for Testnet
+wallet:
+  key_base64: ""  # Will be populated from SUI_PRIVATE_KEY env var at runtime
+
+system_object: 0x1c6036393c894e72fb01f3d03b87d40e84e29ad8a6b40fbbf31ec042d3ee1bd0
+#communitySui:
+#  - https://fullnode.testnet.sui.io:443
+
+aggregator: https://aggregator.walrus-testnet.walrus.space
+
+# Optional: Enable logging
+# log_level: info
